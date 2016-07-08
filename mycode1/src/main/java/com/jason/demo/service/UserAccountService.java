@@ -9,7 +9,6 @@ import com.jason.demo.model.User;
 import com.jason.demo.model.UserRepository;
 
 @Service
-@Transactional
 public class UserAccountService {
 
 	@Autowired

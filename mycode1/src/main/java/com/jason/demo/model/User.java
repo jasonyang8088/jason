@@ -3,8 +3,10 @@ package com.jason.demo.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -20,7 +22,7 @@ public class User extends AbstractPersistable<Long> {
 	@Column
 	private String password;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Role> roles = new ArrayList<Role>();
 
 	public List<Role> getRoles() {

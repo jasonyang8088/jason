@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jason.demo;
+package com.jason.demo.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import com.jason.demo.service.DatabaseUserDetailsService;
-
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter  {
+public class ApplicationSecurity extends WebSecurityConfigurerAdapter  {
 	
 	// @formatter:off
 //	@Autowired
@@ -54,21 +50,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 			.logout()
 				.permitAll();
 	}
-	
-	 @Override  
-	    protected void configure(AuthenticationManagerBuilder auth)  
-	            throws Exception {  
-	  
-	        // 自定义UserDetailsService  
-//	        auth.userDetailsService(userDetailsService()).passwordEncoder(  
-//	                new Md5PasswordEncoder());  
-		 auth.userDetailsService( userDetailsService());
-	    }  
-	
-	@Bean
-   public DatabaseUserDetailsService userDetailsService() {  
-        DatabaseUserDetailsService userDetailsService = new DatabaseUserDetailsService();  
-        return userDetailsService;  
-    }  
 	// @formatter:on
 }

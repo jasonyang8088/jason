@@ -1,14 +1,12 @@
 package com.jason.demo;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
-@EnableTransactionManagement
+@SpringBootApplication  // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class Application {
 	
-//	public static void main(String[] args) {
-//		SpringApplication.run(Application.class, args);
-//	}
-	
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 }
