@@ -1,6 +1,7 @@
 package com.jason.myzss.web.admin.subject;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,5 +18,10 @@ public class SubjectController {
 	@RequestMapping("/getSubject")
 	public Iterable<Subject> getSubject(){
 		return subjectService.findAll();
+	}
+	
+	@RequestMapping("/getSubject/{stage}")
+	public Iterable<Subject> getSubjectById(@PathVariable("stage")Byte stage){
+		return subjectService.findByStage(stage);
 	}
 }

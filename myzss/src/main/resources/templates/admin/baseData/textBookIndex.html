@@ -35,7 +35,9 @@
 						<option value="2">初中</option>
 						<option value="3">高中</option>
 					</select>
-					<select ng-change="changeVersion(0)" ng-model="subjectId" ng-options="subject.id as subject.subjectName for subject in subjectIter">
+					<select ng-change="changeSubject(subjectId)" ng-model="subjectId" ng-options="subject.id as subject.subjectName for subject in subjectIter">
+					</select>
+					<select ng-change="changeVersion(versionId)" ng-model="versionId" ng-options="version.id as version.versionName for version in versionIter">
 					</select>
 				</div>
 				<div class="container">
@@ -46,16 +48,18 @@
 								<td>学段</td>
 								<td>科目</td>
 								<td>版本名称</td>
+								<td>教材名称</td>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="version in versionPage.content" ng-model="version1">
-								<td>{{version.id}}</td>
-								<td ng-if="version.subject.stage==1">小学</td>
-								<td ng-if="version.subject.stage==2">初中</td>
-								<td ng-if="version.subject.stage==3">高中</td>
-								<td>{{version.subject.subjectName}}</td>
-								<td>{{version.versionName}}</td>
+							<tr ng-repeat="textBook in textBookPage.content" ng-model="version1">
+								<td>{{textBook.id}}</td>
+								<td ng-if="textBook.subject.stage==1">小学</td>
+								<td ng-if="textBook.subject.stage==2">初中</td>
+								<td ng-if="textBook.subject.stage==3">高中</td>
+								<td>{{textBook.subject.subjectName}}</td>
+								<td>{{textBook.version.versionName}}</td>
+								<td>{{textBook.bookName}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -87,18 +91,21 @@
 			$scope.stage = 0;
 		if ($scope.subjectId == null)
 			$scope.subjectId = 0;
+		if ($scope.versionId == null)
+			$scope.versionId = 0;
 		if ($scope.number == null)
 			$scope.number = 0;
 		$http({
 			method : 'GET',
-			url : '/admin/version/getVersionPage',
+			url : '/admin/textBook/getTextBookPage',
 			params : {
 				'stage' : $scope.stage,
 				'subjectId' : $scope.subjectId,
+				'versionId' : $scope.versionId,
 				'number' : $scope.number
 			}
 		}).success(function(response) {
-			$scope.versionPage = response;
+			$scope.textBookPage = response;
 			$scope.number = response.number;
 		});
 		$scope.changeStage = function(stage) {
@@ -120,6 +127,12 @@
 				$scope.versionPage = response;
 				$scope.number = response.number;
 			});
+		};
+		$scope.changeSubject = function(subjectId) {
+			$http.get("/teacher/resource/getVersion/" + subjectId).success(
+					function(response) {
+						$scope.versionIter = response;
+					});
 		};
 		$scope.changeVersion = function(number) {
 			$http({

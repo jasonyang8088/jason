@@ -1,12 +1,14 @@
 package com.jason.myzss.repository.jpa;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.jason.myzss.domain.Subject;
 
-public interface SubjectRepository extends CrudRepository<Subject, Long> {
+public interface SubjectRepository extends JpaRepository<Subject, Long> {
 	
-	public Iterable<Subject> findByStage(Byte stage);
+	public List<Subject> findByStage(Byte stage);
 
 }
 

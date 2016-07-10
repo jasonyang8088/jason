@@ -10,4 +10,8 @@ public interface VersionService {
 	public Iterable<Version> findVersionBySubjectID(Long id);
 	
 	public Page<Version> findAll(Pageable pageable);
+	
+	public Page<Version> findByStage(Pageable pageable,Byte stage);
+	
+	public Page<Version> findBySubjectId(Pageable pageable,Long subjectId);
 }

@@ -26,4 +26,16 @@ public class VersionServiceImpl implements VersionService {
 		return versionRepository.findAll(pageable);
 	}
 
+	@Override
+	public Page<Version> findByStage(Pageable pageable, Byte stage) {
+		Assert.notNull(pageable, "Pageable must not be null!");
+		return versionRepository.findBySubjectStage(pageable,stage);
+	}
+
+	@Override
+	public Page<Version> findBySubjectId(Pageable pageable, Long subjectId) {
+		Assert.notNull(pageable, "Pageable must not be null!");
+		return versionRepository.findBySubjectId(pageable,subjectId);
+	}
+
 }

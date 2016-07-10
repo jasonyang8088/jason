@@ -14,4 +14,6 @@ public interface VersionRepository extends CrudRepository<Version, Long> {
 	public List<Version> findBySubjectStage(Byte stage);
 	public List<Version> findBySubjectId(Long id);
 	public Page<Version> findAll(Pageable pageable);
+	public Page<Version> findBySubjectStage(Pageable pageable,Byte stage);
+	public Page<Version> findBySubjectId(Pageable pageable,Long subjectId);
 }
