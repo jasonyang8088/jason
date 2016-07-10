@@ -31,28 +31,17 @@ public class VersionTest {
 	@Test
 	@Rollback(false)
 	public void saveVersionTest(){
-		Version version = new Version();
-		Subject s = subRepository.findOne(Long.valueOf(201));
-		version.setSubject(s);
-		version.setDepth((byte)1);
-		version.setVersionName("苏教版");
-		versionRepository.save(version);
+		Iterable<Subject> iter = subRepository.findAll();
+		Iterator<Subject> it = iter.iterator();
+		while(it.hasNext()){
+			Subject sub = it.next();
+			Version version = new Version();
+			version.setSubject(sub);
+			version.setVersionName("苏教版");
+			versionRepository.save(version);
+		}
 	}
 	
-	@Test
-	@Rollback(false)
-	public void saveChildVersionTest(){
-		Version v = versionRepository.findOne(Long.valueOf(1));
-		Version version = new Version();
-		version.setVersionName("人教版2018");
-		version.setSubject(v.getSubject());
-		version.setDepth((byte) (v.getDepth()+1));
-		versionRepository.save(version);
-		List<Version> list = v.getVersionList();
-		list.add(version);
-		v.setVersionList(list);
-//		versionRepository.save(v);
-	}
 	@Test
 	public void findTest(){
 		Iterable<Version> list = versionRepository.findAll();
@@ -63,15 +52,6 @@ public class VersionTest {
 		}
 	}
 	
-	@Test
-	public void findOneTest(){
-		Iterable<Version> list = versionRepository.findByDepth((byte)1);
-		Iterator<Version> it = list.iterator();
-		while(it.hasNext()){
-			Version v =it.next();
-			System.out.println(v.toString());
-		}
-	}
 	
 	@Test
 	public void findByStageTest(){

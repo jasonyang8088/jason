@@ -1,6 +1,7 @@
 package com.jason.myzss.dao;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
@@ -31,17 +32,23 @@ public class BookNodeTest {
 	@Test
 	@Rollback(false)
 	public void saveTest(){
-		BookNode node = new BookNode();
-		node.setName("第一章 开始");
-		node.setDepth((byte)1);
-		TextBook book = textbookRepository.findOne(Long.valueOf(1));
-		node.setTextBook(book);
-		BookNode node1 = new BookNode();
-		node1.setName("第一节的内容");
-		node1.setDepth((byte)2);
-		bookNodeRepository.save(node1);
-		List<BookNode> list = new ArrayList<BookNode>();
-		node.setBookNodeList(list);
-		bookNodeRepository.save(node);
+		Iterable<TextBook> iter = textbookRepository.findAll();
+		Iterator<TextBook> it = iter.iterator();
+		while(it.hasNext()){
+			TextBook book =it.next();
+			BookNode node = new BookNode();
+			node.setName("第一章 开始");
+			node.setDepth((byte)1);
+			node.setTextBook(book);
+			BookNode node1 = new BookNode();
+			node1.setName("第一节的内容");
+			node1.setDepth((byte)2);
+			node1.setTextBook(book);
+			bookNodeRepository.save(node1);
+			List<BookNode> list = new ArrayList<BookNode>();
+			list.add(node1);
+			node.setBookNodeList(list);
+			bookNodeRepository.save(node);
+		}
 	}
 }

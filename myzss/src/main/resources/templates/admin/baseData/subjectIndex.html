@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+</head>
+<body ng-app="subjectApp">
+	<!-- Header -->
+	<div th:replace="admin/fragments/header :: header">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Brand</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<li><a href="#">首页</a></li>
+					<li><a href="#">资料库</a></li>
+					<li><a href="#">试题库</a></li>
+				</div>
+			</div>
+		</nav>
+	</div>
+
+	<div class="container-fluid">
+		<div th:replace="admin/fragments/baseDataLeft :: baseDataLeft">
+			<div class="col-md-2">
+				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item" href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
+			</div>
+		</div>
+		<div class="col-md-10">
+			<div ng-controller="subjectCtrl">
+				<div>
+					<button>添加</button>
+				</div>
+				<div>
+					<label>小学：</label>
+					<ul class="list-inline">
+						<li ng-repeat="subject in subjectIter | filter:{stage: 1}" ng-model="subject1"><small>({{subject.id}})</small>
+						<span>{{subject.subjectName}}</span></li>
+					</ul>
+					<label>初中：</label>
+					<ul class="list-inline">
+						<li ng-repeat="subject in subjectIter | filter:{stage: 2}" ng-model="subject2"><small>({{subject.id}})</small>
+						<span>{{subject.subjectName}}</span></li>
+					</ul>
+					<label>高中：</label>
+					<ul class="list-inline">
+						<li ng-repeat="subject in subjectIter | filter:{stage: 3}" ng-model="subject3"><small>({{subject.id}})</small>
+						<span>{{subject.subjectName}}</span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script>
+	var subjectApp = angular.module("subjectApp", []);
+	subjectApp.controller("subjectCtrl", function($scope, $http) {
+		$http.get("/admin/subject/getSubject").success(function(response) {
+			$scope.subjectIter = response;
+		});
+	});
+</script>
+</html>

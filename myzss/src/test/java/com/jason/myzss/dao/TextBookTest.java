@@ -1,5 +1,7 @@
 package com.jason.myzss.dao;
 
+import java.util.Iterator;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +33,21 @@ public class TextBookTest {
 	@Test
 	@Rollback(false)
 	public void saveBookTest(){
-		TextBook tbook = new TextBook();
-		tbook.setBookName("九年级下");
-		Version version = versionRepository.findOne(Long.valueOf(2));
-		tbook.setSubject(version.getSubject());
-		tbook.setVersion(version);
-		textbookRepository.save(tbook);
+		Iterable<Version> versions = versionRepository.findAll();
+		Iterator<Version> iter = versions.iterator();
+		while(iter.hasNext()){
+			Version v = iter.next();
+			TextBook tbook = new TextBook();
+			if(v.getSubject().getStage().equals((byte)1)){
+				tbook.setBookName("一年级");
+			}else if(v.getSubject().getStage().equals((byte)2)){
+				tbook.setBookName("九年级");
+			}else if(v.getSubject().getStage().equals((byte)3)){
+				tbook.setBookName("必修一");
+			}
+			tbook.setSubject(v.getSubject());
+			tbook.setVersion(v);
+			textbookRepository.save(tbook);
+		}
 	}
 }

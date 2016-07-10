@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+
+</head>
+<body>
+	<!-- Header -->
+	<div th:replace="teacher/fragments/header :: header">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Brand</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<li><a href="#">首页</a></li>
+					<li><a href="#">资料库</a></li>
+					<li><a href="#">试题库</a></li>
+				</div>
+			</div>
+		</nav>
+	</div>
+	<div class="container" ng-app="selectApp" ng-controller="selectCtrl">
+		<div>
+			<div class="col-md-offset-1">
+				<div>
+					<select ng-change="changeStage(stage)" ng-model="stage">
+						<option value="1">小学</option>
+						<option value="2">初中</option>
+						<option value="3">高中</option>
+					</select>
+					<select ng-change="changeSubject(subjectId)" ng-model="subjectId" ng-options="subject.id as subject.subjectName for subject in subjectIter">
+					</select>
+					<select ng-change="changeVersion(versionId)" ng-model="versionId" ng-options="version.id as version.versionName for version in versionIter">
+					</select>
+					<select ng-change="changeBook(bookId)" ng-model="bookId" ng-options="book.id as book.bookName for book in bookIter">
+					</select>
+				</div>
+
+				<div></div>
+			</div>
+		</div>
+		<div class="col-md-12" style="margin-top: 20px;">
+			<div class="col-md-3 panel-group" id="accordion" ng-controller="panelCtrl">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-title">
+							<a data-toggle="collapse" data-parent="accordion" href="#collapseOne">章节内容</a>
+						</div>
+					</div>
+					<div id="collapseOne" class="panel-collapse collapse in">
+						<div class="panel-body">
+							<ul ng-repeat="node1 in bookNodeIter">
+								<li ng-model="node11" >{{node1.name}}</li>
+								<ul>
+									<li ng-model="node22" ng-repeat="node2 in node1.bookNodeList">{{node2.name}}</li>
+								</ul>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-title">
+							<a data-toggle="collapse" data-parent="accordion" href="#collapseTwo">知识点内容</a>
+						</div>
+					</div>
+					<div id="collapseTwo" class="panel-collapse collapse">
+						<div class="panel-body"></div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-title">
+							<a data-toggle="collapse" data-parent="accordion" href="#collapseThree">章节内容</a>
+						</div>
+					</div>
+					<div id="collapseThree" class="panel-collapse collapse">
+						<div class="panel-body"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-title">文档显示</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script>
+	var selectApp = angular.module("selectApp", []);
+	selectApp.controller('selectCtrl', function($scope, $http) {
+		$scope.stage = '1';
+		$scope.subjectId = 101;
+		$scope.versionId = 1;
+		$scope.bookId = 1;
+		$http.get("/teacher/resource/getSubject/" + $scope.stage).success(
+				function(response) {
+					$scope.subjectIter = response;
+					if (response != null) {
+						$scope.datas = angular.fromJson(response);
+						$scope.subjectId = $scope.datas[0].id;
+						$scope.changeSubject($scope.subjectId);
+					}
+				});
+
+		$scope.changeStage = function(stage) {
+			$http.get("/teacher/resource/getSubject/" + stage).success(
+					function(response) {
+						$scope.subjectIter = response;
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.subjectId = $scope.datas[0].id;
+							$scope.changeSubject($scope.subjectId);
+						}
+					})
+		}
+		$scope.changeSubject = function(subjectId) {
+			$http.get("/teacher/resource/getVersion/" + subjectId).success(
+					function(response) {
+						$scope.versionIter = response;
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.versionId = $scope.datas[0].id;
+							$scope.changeVersion($scope.versionId);
+						}
+					});
+		}
+
+		$scope.changeVersion = function(versionId) {
+			$http.get("/teacher/resource/getTextBook/" + versionId).success(
+					function(response) {
+						$scope.bookIter = response;
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.bookId = $scope.datas[0].id;
+							$scope.changeBook($scope.bookId);
+						}
+					});
+		}
+		
+		$scope.changeBook = function(bookId) {
+			$http.get("/teacher/resource/getBookNode/" + bookId).success(
+					function(response) {
+						$scope.bookNodeIter = response;
+					});
+		}
+		
+	});
+	selectApp.controller('panelCtrl', function($scope, $http) {
+		
+	});
+</script>
+</html>
