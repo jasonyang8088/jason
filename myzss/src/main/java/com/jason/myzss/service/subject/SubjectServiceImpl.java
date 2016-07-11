@@ -1,5 +1,7 @@
 package com.jason.myzss.service.subject;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +15,12 @@ public class SubjectServiceImpl implements SubjectService {
 	private SubjectRepository subjectRepository;
 	
 	@Override
-	public Iterable<Subject> findAll() {
-		Iterable<Subject> it = subjectRepository.findAll();
-		return it;
+	public List<Subject> findAll() {
+		return  subjectRepository.findAll();
 	}
 
 	@Override
-	public Iterable<Subject> findByStage(Byte stage) {
+	public List<Subject> findByStage(Byte stage) {
 		return subjectRepository.findByStage(stage);
 	}
 

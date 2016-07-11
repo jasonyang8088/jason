@@ -1,5 +1,6 @@
 package com.jason.myzss.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,5 +17,6 @@ public class TextBook {
 	private @Id @GeneratedValue(strategy=GenerationType.AUTO) Long id;
 	private @ManyToOne @NotNull Subject subject;
 	private @ManyToOne @NotNull Version version;
-	private String bookName;
+	private @Column(length=20) String bookName;
+	private Byte status;
 }

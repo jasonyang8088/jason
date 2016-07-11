@@ -35,14 +35,14 @@ public class ResourceRestController {
 		return subjectService.findByStage(stage);
 	}
 	
-	@RequestMapping("/getVersion/{subjectId}")
-	public Iterable<Version> getSubject(@PathVariable("subjectId") Long id){
-		return versionService.findVersionBySubjectID(id);
+	@RequestMapping("/subjectId/{subjectId}/version")
+	public Iterable<Version> findBySubjectId(@PathVariable("subjectId") Long subjectId){
+		return versionService.findBySubjectId(subjectId);
 	}
 	
 	@RequestMapping("/getTextBook/{versionId}")
 	public Iterable<TextBook> getBook(@PathVariable("versionId") Long id){
-		return textBookService.findBookByVersionId(id);
+		return textBookService.findByVersionId(id);
 	}
 	
 	@RequestMapping("/getBookNode/{bookId}")

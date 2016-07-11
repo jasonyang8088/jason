@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -22,7 +24,7 @@ public class BookNode {
 	private @ManyToOne @NotNull TextBook textBook;
 	private @NotNull Byte depth;
 	private @Column(length=20) @NotNull String name;
-	private @OneToMany List<BookNode> bookNodeList;
-	private @ManyToMany List<Document> docList;
+	private @JsonIgnore @OneToMany List<BookNode> bookNodeList;
+	private @JsonIgnore @ManyToMany List<Document> docList;
 
 }

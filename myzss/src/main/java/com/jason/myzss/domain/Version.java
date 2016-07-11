@@ -16,4 +16,5 @@ public class Version {
 	private @Id @GeneratedValue(strategy=GenerationType.AUTO) Long id;
 	private @ManyToOne Subject subject;
 	private @Column(length=20)String versionName;
+	private Byte status;
 }

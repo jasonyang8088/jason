@@ -1,5 +1,7 @@
 package com.jason.myzss.service.bookNode;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +15,12 @@ public class BookNodeServiceImpl implements BookNodeService {
 	private BookNodeRepository bookNodeRepository;
 
 	@Override
-	public Iterable<BookNode> findByBookId(Long id) {
+	public List<BookNode> findByBookId(Long id) {
 		return bookNodeRepository.findByTextBookId(id);
 	}
 
 	@Override
-	public Iterable<BookNode> findByBookIdAndDepth(Long id, Byte depth) {
+	public List<BookNode> findByBookIdAndDepth(Long id, Byte depth) {
 		return bookNodeRepository.findByTextBookIdAndDepth(id, depth);
 	}
 

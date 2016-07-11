@@ -19,5 +19,6 @@ public class MVCConfiguration extends WebMvcConfigurerAdapter {
 		registry.addViewController("/admin/baseData/subjectIndex").setViewName("/admin/baseData/subjectIndex");
 		registry.addViewController("/admin/baseData/versionIndex").setViewName("/admin/baseData/versionIndex");
 		registry.addViewController("/admin/baseData/textBookIndex").setViewName("/admin/baseData/textBookIndex");
+		registry.addViewController("/admin/baseData/bookNodeIndex").setViewName("/admin/baseData/bookNodeIndex");
 	}
 }

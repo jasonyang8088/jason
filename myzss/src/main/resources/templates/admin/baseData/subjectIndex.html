@@ -28,6 +28,7 @@
 			</div>
 		</div>
 		<div class="col-md-10">
+			
 			<div ng-controller="subjectCtrl">
 				<div>
 					<button>添加</button>
@@ -60,7 +61,7 @@
 <script>
 	var subjectApp = angular.module("subjectApp", []);
 	subjectApp.controller("subjectCtrl", function($scope, $http) {
-		$http.get("/admin/subject/getSubject").success(function(response) {
+		$http.get("/common/subjects").success(function(response) {
 			$scope.subjectIter = response;
 		});
 	});

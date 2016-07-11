@@ -52,7 +52,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="textBook in textBookPage.content" ng-model="version1">
+							<tr ng-repeat="textBook in textbookIter" ng-model="version1">
 								<td>{{textBook.id}}</td>
 								<td ng-if="textBook.subject.stage==1">小学</td>
 								<td ng-if="textBook.subject.stage==2">初中</td>
@@ -63,17 +63,6 @@
 							</tr>
 						</tbody>
 					</table>
-					<nav>
-						<ul class="pagination">
-							<li><a ng-click="changeVersion(number-2)" ng-if="number &gt; 1">{{number-1}}</a></li>
-							<li><a ng-click="changeVersion(number-1)" ng-if="number &gt; 0">{{number}}</a></li>
-							<li><a ng-click="changeVersion(number)">{{number+1}}</a></li>
-							<li><a ng-click="changeVersion(number+1)">{{number+2}}</a></li>
-							<li><a ng-click="changeVersion(number+2)">{{number+3}}</a></li>
-							<li><a ng-click="changeVersion(number+3)" ng-if="number &lt; 2">{{number+4}}</a></li>
-							<li><a ng-click="changeVersion(number+4)" ng-if="number &lt; 1">{{number+5}}</a></li>
-						</ul>
-					</nav>
 				</div>
 			</div>
 		</div>
@@ -87,67 +76,46 @@
 <script>
 	var subjectApp = angular.module("versionApp", []);
 	subjectApp.controller("versionCtrl", function($scope, $http) {
-		if ($scope.stage == null)
-			$scope.stage = 0;
-		if ($scope.subjectId == null)
-			$scope.subjectId = 0;
-		if ($scope.versionId == null)
-			$scope.versionId = 0;
-		if ($scope.number == null)
-			$scope.number = 0;
-		$http({
-			method : 'GET',
-			url : '/admin/textBook/getTextBookPage',
-			params : {
-				'stage' : $scope.stage,
-				'subjectId' : $scope.subjectId,
-				'versionId' : $scope.versionId,
-				'number' : $scope.number
-			}
-		}).success(function(response) {
-			$scope.textBookPage = response;
-			$scope.number = response.number;
-		});
+		$scope.stage = '1';
+		$scope.subjectId = 101;
+		$http.get('/common/stage/' + $scope.stage + '/subjects').success(
+				function(response) {
+					$scope.subjectIter = response;
+					if (response != null) {
+						$scope.datas = angular.fromJson(response);
+						$scope.subjectId = $scope.datas[0].id;
+						$scope.changeSubject($scope.subjectId);
+					}
+				});
+
 		$scope.changeStage = function(stage) {
-			$http.get("/admin/subject/getSubject/" + stage).success(
+			$http.get('/common/stage/' + stage + '/subjects').success(
 					function(response) {
 						$scope.subjectIter = response;
-						$scope.number = 0;
-					});
-			$scope.subjectId = 0;
-			$http({
-				method : 'GET',
-				url : '/admin/version/getVersionPage',
-				params : {
-					'stage' : $scope.stage,
-					'subjectId' : $scope.subjectId,
-					'number' : $scope.number
-				}
-			}).success(function(response) {
-				$scope.versionPage = response;
-				$scope.number = response.number;
-			});
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.subjectId = $scope.datas[0].id;
+							$scope.changeSubject($scope.subjectId);
+						}
+					})
 		};
 		$scope.changeSubject = function(subjectId) {
-			$http.get("/teacher/resource/getVersion/" + subjectId).success(
+			$http.get('/common/subject/' + subjectId + '/versions').success(
 					function(response) {
 						$scope.versionIter = response;
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.versionId = $scope.datas[0].id;
+							$scope.changeVersion($scope.versionId);
+						}
 					});
 		};
-		$scope.changeVersion = function(number) {
-			$http({
-				method : 'GET',
-				url : '/admin/version/getVersionPage',
-				params : {
-					'stage' : $scope.stage,
-					'subjectId' : $scope.subjectId,
-					'number' : number
-				}
-			}).success(function(response) {
-				$scope.versionPage = response;
-				$scope.number = response.number;
-			});
-		};
+		$scope.changeVersion = function(versionId) {
+			$http.get('/common/version/' + versionId + '/textbooks').success(
+					function(response) {
+						$scope.textbookIter = response;
+					});
+		}
 	});
 </script>
 </html>

@@ -1,10 +1,9 @@
 package com.jason.myzss.service.version;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import com.jason.myzss.domain.Version;
 import com.jason.myzss.repository.jpa.VersionRepository;
@@ -16,26 +15,8 @@ public class VersionServiceImpl implements VersionService {
 	private VersionRepository versionRepository;
 
 	@Override
-	public Iterable<Version> findVersionBySubjectID(Long id) {
-		return versionRepository.findBySubjectId(id);
-	}
-
-	@Override
-	public Page<Version> findAll(Pageable pageable) {
-		Assert.notNull(pageable, "Pageable must not be null!");
-		return versionRepository.findAll(pageable);
-	}
-
-	@Override
-	public Page<Version> findByStage(Pageable pageable, Byte stage) {
-		Assert.notNull(pageable, "Pageable must not be null!");
-		return versionRepository.findBySubjectStage(pageable,stage);
-	}
-
-	@Override
-	public Page<Version> findBySubjectId(Pageable pageable, Long subjectId) {
-		Assert.notNull(pageable, "Pageable must not be null!");
-		return versionRepository.findBySubjectId(pageable,subjectId);
+	public List<Version> findBySubjectId(Long subjectId) {
+		return versionRepository.findBySubjectId(subjectId);
 	}
 
 }
