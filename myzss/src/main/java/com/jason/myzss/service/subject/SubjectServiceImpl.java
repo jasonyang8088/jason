@@ -24,4 +24,9 @@ public class SubjectServiceImpl implements SubjectService {
 		return subjectRepository.findByStage(stage);
 	}
 
+	@Override
+	public Subject getOnd(Long subjectId) {
+		return subjectRepository.getOne(subjectId);
+	}
+
 }

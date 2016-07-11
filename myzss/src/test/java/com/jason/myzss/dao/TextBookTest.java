@@ -38,16 +38,30 @@ public class TextBookTest {
 		while(iter.hasNext()){
 			Version v = iter.next();
 			TextBook tbook = new TextBook();
+			TextBook tbook1 = new TextBook();
+			TextBook tbook2= new TextBook();
 			if(v.getSubject().getStage().equals((byte)1)){
 				tbook.setBookName("一年级");
+				tbook1.setBookName("二年级");
+				tbook2.setBookName("三年级");
 			}else if(v.getSubject().getStage().equals((byte)2)){
-				tbook.setBookName("九年级");
+				tbook.setBookName("七年级");
+				tbook1.setBookName("八年级");
+				tbook2.setBookName("九年级");
 			}else if(v.getSubject().getStage().equals((byte)3)){
 				tbook.setBookName("必修一");
+				tbook1.setBookName("必修二");
+				tbook2.setBookName("必修三");
 			}
 			tbook.setSubject(v.getSubject());
 			tbook.setVersion(v);
 			textbookRepository.save(tbook);
+			tbook1.setSubject(v.getSubject());
+			tbook1.setVersion(v);
+			textbookRepository.save(tbook1);
+			tbook2.setSubject(v.getSubject());
+			tbook2.setVersion(v);
+			textbookRepository.save(tbook2);
 		}
 	}
 }

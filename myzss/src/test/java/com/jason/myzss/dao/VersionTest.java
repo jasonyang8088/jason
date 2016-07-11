@@ -39,6 +39,18 @@ public class VersionTest {
 			version.setSubject(sub);
 			version.setVersionName("苏教版");
 			versionRepository.save(version);
+			Version version1 = new Version();
+			version1.setSubject(sub);
+			version1.setVersionName("人教版");
+			versionRepository.save(version1);
+			Version version2 = new Version();
+			version2.setSubject(sub);
+			version2.setVersionName("浙江版");
+			versionRepository.save(version2);
+			Version version3 = new Version();
+			version3.setSubject(sub);
+			version3.setVersionName("江西版");
+			versionRepository.save(version3);
 		}
 	}
 	

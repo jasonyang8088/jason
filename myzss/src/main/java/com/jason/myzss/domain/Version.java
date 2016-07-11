@@ -18,3 +18,4 @@ public class Version {
 	private @Column(length=20)String versionName;
 	private Byte status;
 }
+ 

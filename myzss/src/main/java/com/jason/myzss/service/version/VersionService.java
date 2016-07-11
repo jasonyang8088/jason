@@ -8,4 +8,6 @@ public interface VersionService {
 
 	List<Version> findBySubjectId(Long subjectId);
 	
+	void save(Version version);
+	
 }

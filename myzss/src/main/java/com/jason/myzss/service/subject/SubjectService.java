@@ -9,5 +9,7 @@ public interface SubjectService {
 	public List<Subject> findAll();
 	
 	public List<Subject> findByStage(Byte stage);
+	
+	public Subject getOnd(Long subjectId);
 
 }

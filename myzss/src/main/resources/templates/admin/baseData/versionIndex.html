@@ -24,24 +24,47 @@
 	<div class="container-fluid">
 		<div th:replace="admin/fragments/baseDataLeft :: baseDataLeft">
 			<div class="col-md-2">
-				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item" href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
+				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item"
+					href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
 			</div>
 		</div>
 		<div class="col-md-10">
-			<div>
-				<button>新建一个版本</button>
-			</div>
-			<div style="padding:16px" ng-controller="versionCtrl">
-				<div>
-					<select ng-change="changeStage(stage)" ng-model="stage">
-						<option value="1">小学</option>
-						<option value="2">初中</option>
-						<option value="3">高中</option>
-					</select>
-					<select ng-change="changeSubject(subjectId)" ng-model="subjectId" ng-options="subject.id as subject.subjectName for subject in subjectIter">
-					</select>
+			<div class="panel-group" id="accordion" ng-controller="versionCtrl">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">新增加一个版本</a>
+						</div>
+					</div>
+					<div id="collapseOne" class="panel-collapse collapse">
+						<div class="panel-body">
+							<div>
+								请输入你将建立的版本名称<input type="text" ng-model="versionName"></input>
+							</div>
+							<div>
+								你将建立的是
+								<mark>
+									<span ng-if="stage==1">小学</span> <span ng-if="stage==2">初中</span> <span ng-if="stage==3">高中</span>
+								</mark>
+								<mark>{{subject.subjectName}}</mark>
+								<mark> {{versionName}}</mark>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<button ng-click="saveVersion()">保存</button>
+						</div>
+					</div>
 				</div>
-				<div class="container">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<select ng-change="changeStage(stage)" ng-model="stage">
+							<option value="1">小学</option>
+							<option value="2">初中</option>
+							<option value="3">高中</option>
+						</select> <select ng-change="changeSubject(subjectId)" ng-model="subjectId"
+							ng-options="subject.id as subject.subjectName for subject in subjectIter">
+						</select>
+					</div>
 					<table class="table">
 						<thead>
 							<tr>
@@ -69,7 +92,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </body>
 <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
@@ -81,31 +103,49 @@
 	subjectApp.controller("versionCtrl", function($scope, $http) {
 		$scope.stage = '1';
 		$scope.subjectId = 101;
-		$http.get('/common/stage/'+$scope.stage+'/subjects').success(function(response) {
-			$scope.subjectIter = response;
-			if (response != null) {
-				$scope.datas = angular.fromJson(response);
-				$scope.subjectId = $scope.datas[0].id;
-				$scope.changeSubject($scope.subjectId);
-			}
-		});
-		
+		$http.get('/common/stage/' + $scope.stage + '/subjects').success(
+				function(response) {
+					$scope.subjectIter = response;
+					if (response != null) {
+						$scope.datas = angular.fromJson(response);
+						$scope.subjectId = $scope.datas[0].id;
+						$scope.changeSubject($scope.subjectId);
+					}
+				});
+
 		$scope.changeStage = function(stage) {
-			$http.get('/common/stage/'+stage+'/subjects').success(
+			$http.get('/common/stage/' + stage + '/subjects').success(
 					function(response) {
 						$scope.subjectIter = response;
 						if (response != null) {
 							$scope.datas = angular.fromJson(response);
 							$scope.subjectId = $scope.datas[0].id;
+							$scope.subject = $scope.datas[0];
 							$scope.changeSubject($scope.subjectId);
 						}
 					})
 		};
 		$scope.changeSubject = function(subjectId) {
-			$http.get('/common/subject/'+subjectId+'/versions').success(
+			$http.get('/common/subject/' + subjectId + '/versions').success(
 					function(response) {
 						$scope.versionIter = response;
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.subject = $scope.datas[0].subject;
+						}
 					});
+		};
+		$scope.saveVersion = function() {
+			$http({
+				url : "/common/version",
+				method : "post",
+				data : {
+					"subject" : $scope.subject,
+					"versionName" : $scope.versionName
+				}
+			}).success(function(response) {
+
+			})
 		}
 	});
 </script>

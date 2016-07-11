@@ -19,4 +19,9 @@ public class VersionServiceImpl implements VersionService {
 		return versionRepository.findBySubjectId(subjectId);
 	}
 
+	@Override
+	public void save(Version version) {
+		versionRepository.save(version);
+	}
+
 }
