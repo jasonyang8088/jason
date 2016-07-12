@@ -29,10 +29,11 @@
 		</div>
 		<div class="col-md-10">
 			<div>
-				<button >上传自定义的章节</button>
+				<button>上传自定义的章节</button>
 			</div>
-			<div style="padding:16px" ng-controller="versionCtrl">
-				<div>
+			<div class="panel panel-default" style="padding: 16px" ng-controller="versionCtrl">
+
+				<div class="panel-heading">
 					<select ng-change="changeStage(stage)" ng-model="stage">
 						<option value="1">小学</option>
 						<option value="2">初中</option>
@@ -45,13 +46,23 @@
 					<select ng-change="changeBook(bookId)" ng-model="bookId" ng-options="book.id as book.bookName for book in bookIter">
 					</select>
 				</div>
-				<div style="padding:16px" class="container">
-					<ul ng-repeat="node1 in bookNodeIter">
-						<li ng-model="node11">{{node1.name}}</li>
-						<ul>
-							<li ng-model="node22" ng-repeat="node2 in node1.bookNodeList">{{node2.name}}</li>
+				<div class="panel-body">
+					<button ng-click="addNode()" class="btn btn-default">添加</button>
+					<button class="btn btn-default">修改</button>
+					<button class="btn btn-default">删除</button>
+				</div>
+				<div style="padding: 16px" class="container">
+					<ul class="nodeList" ng-repeat="node1 in bookNodeIter">
+						<span ng-show="!tag.edit" ng-click="bindNode(node1)" ng-dblclick="tag.edit = true">{{node1.name}}</span>
+						<input type="text" ng-blur="tag.edit = false" ng-show="tag.edit" ng-model="node1.name" />
+						<ul ng-repeat="node2 in node1.bookNodeList">
+							<a ng-click="bindNode(node2)" ng-model="node2">{{node2.name}}</a>
 						</ul>
 					</ul>
+				</div>
+				<div class="panel-footer">
+					<button>保存</button>
+					<p>{{text}}</p>
 				</div>
 			</div>
 		</div>
@@ -115,7 +126,25 @@
 					function(response) {
 						$scope.bookNodeIter = response;
 					});
-		}
+		};
+		$scope.bindNode = function(node) {
+			$scope.node = node;
+		};
+		$scope.addNode = function() {
+			var bookNode = {
+				'textBook' : $scope.textBook,
+				'depth' : '1',
+				name : '请修改名称'
+			}
+
+			if ($scope.node != null) {
+				angular.forEach($scope.bookNodeIter, function(node) {
+					if (node.id == $scope.node.id)
+						node.bookNodeList.push(bookNode);
+				});
+			} else
+				$scope.bookNodeIter.push(bookNode);
+		};
 	});
 </script>
 </html>

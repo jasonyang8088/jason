@@ -9,5 +9,11 @@ public interface VersionService {
 	List<Version> findBySubjectId(Long subjectId);
 	
 	void save(Version version);
+
+	void delete(Version version);
+
+	void delete(Long id);
+
+	Version find(Long id);
 	
 }

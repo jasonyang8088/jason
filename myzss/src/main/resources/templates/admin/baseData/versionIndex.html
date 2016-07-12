@@ -4,7 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 </head>
-<body ng-app="versionApp">
+<body ng-app="versionApp" ng-controller="versionCtrl">
 	<!-- Header -->
 	<div th:replace="admin/fragments/header :: header">
 		<nav class="navbar navbar-default">
@@ -24,27 +24,28 @@
 	<div class="container-fluid">
 		<div th:replace="admin/fragments/baseDataLeft :: baseDataLeft">
 			<div class="col-md-2">
-				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item"
-					href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
+				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item" href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
 			</div>
 		</div>
 		<div class="col-md-10">
-			<div class="panel-group" id="accordion" ng-controller="versionCtrl">
+			<div class="panel-group" id="accordion">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="panel-title">
 							<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">新增加一个版本</a>
 						</div>
 					</div>
-					<div id="collapseOne" class="panel-collapse collapse">
+					<div id="collapseOne" class="panel-collapse collapse {{collapseIn}}">
 						<div class="panel-body">
 							<div>
-								请输入你将建立的版本名称<input type="text" ng-model="versionName"></input>
+								<input type="text" ng-model="versionName" placeholder="请输入你将建立的版本名称"></input>
 							</div>
-							<div>
-								你将建立的是
+							<div style="padding: 8px">
+								你将建立的版本是
 								<mark>
-									<span ng-if="stage==1">小学</span> <span ng-if="stage==2">初中</span> <span ng-if="stage==3">高中</span>
+									<span ng-if="stage==1">小学</span>
+									<span ng-if="stage==2">初中</span>
+									<span ng-if="stage==3">高中</span>
 								</mark>
 								<mark>{{subject.subjectName}}</mark>
 								<mark> {{versionName}}</mark>
@@ -61,8 +62,8 @@
 							<option value="1">小学</option>
 							<option value="2">初中</option>
 							<option value="3">高中</option>
-						</select> <select ng-change="changeSubject(subjectId)" ng-model="subjectId"
-							ng-options="subject.id as subject.subjectName for subject in subjectIter">
+						</select>
+						<select ng-change="changeSubject(subjectId)" ng-model="subjectId" ng-options="subject.id as subject.subjectName for subject in subjectIter">
 						</select>
 					</div>
 					<table class="table">
@@ -85,10 +86,41 @@
 								<td>{{version.subject.subjectName}}</td>
 								<td>{{version.versionName}}</td>
 								<td>{{version.status}}</td>
-								<td><a>修改</a> <a>冻结</a></td>
+								<td><button ng-click="toShowVersion(version)" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-lg">修改</button> <a class="btn btn-default">冻结</a> <button class="btn btn-default" ng-click="delectVersion(version)">删除</button></td>
 							</tr>
 						</tbody>
 					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<input type="text" ng-model="version.versionName" placeholder="请输入你将改成的版本名称"></input>
+					</div>
+					<div style="padding: 8px">
+						你将修改成的版本是
+						<mark>
+							<span ng-if="stage==1">小学</span>
+							<span ng-if="stage==2">初中</span>
+							<span ng-if="stage==3">高中</span>
+						</mark>
+						<mark>{{version.subject.subjectName}}</mark>
+						<mark> {{version.versionName}}</mark>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button ng-click="updateVersion(version)" type="button" class="btn btn-primary">Save changes</button>
 				</div>
 			</div>
 		</div>
@@ -102,17 +134,8 @@
 	var subjectApp = angular.module("versionApp", []);
 	subjectApp.controller("versionCtrl", function($scope, $http) {
 		$scope.stage = '1';
-		$scope.subjectId = 101;
-		$http.get('/common/stage/' + $scope.stage + '/subjects').success(
-				function(response) {
-					$scope.subjectIter = response;
-					if (response != null) {
-						$scope.datas = angular.fromJson(response);
-						$scope.subjectId = $scope.datas[0].id;
-						$scope.changeSubject($scope.subjectId);
-					}
-				});
-
+		$scope.subjectId = '101';
+		
 		$scope.changeStage = function(stage) {
 			$http.get('/common/stage/' + stage + '/subjects').success(
 					function(response) {
@@ -126,6 +149,9 @@
 					})
 		};
 		$scope.changeSubject = function(subjectId) {
+			angular.forEach($scope.subjectIter,function(subject){
+				if(subject.id==subjectId)$scope.subject=subject;
+			});
 			$http.get('/common/subject/' + subjectId + '/versions').success(
 					function(response) {
 						$scope.versionIter = response;
@@ -144,9 +170,34 @@
 					"versionName" : $scope.versionName
 				}
 			}).success(function(response) {
-
+				$scope.versionIter = response;
+				$scope.versionName = '';
 			})
-		}
+		};
+		$scope.delectVersion = function(version) {
+			$http({
+				url : "/common/version/"+version.id,
+				method : "delete",
+			}).success(function(response) {
+				$scope.changeSubject($scope.subjectId)
+			})
+		};
+		$scope.toShowVersion = function(version) {
+			$scope.version=version;
+		};
+		
+		$scope.updateVersion = function(version) {
+			$http({
+				url : "/common/version/"+version.id,
+				method : "put",
+				data:{
+					'versionName':version.versionName
+				}
+			}).success(function(response) {
+				$scope.changeSubject($scope.subjectId)
+			})
+		};
+		$scope.changeStage($scope.stage);
 	});
 </script>
 </html>

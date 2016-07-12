@@ -8,4 +8,8 @@ public interface TextBookService {
 
 	List<TextBook> findByVersionId(Long versionId);
 
+	void save(TextBook textBook);
+
+	void delete(Long id);
+
 }

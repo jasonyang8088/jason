@@ -24,7 +24,9 @@ public class BookNode {
 	private @ManyToOne @NotNull TextBook textBook;
 	private @NotNull Byte depth;
 	private @Column(length=20) @NotNull String name;
-	private @JsonIgnore @OneToMany List<BookNode> bookNodeList;
+	private @OneToMany List<BookNode> bookNodeList;
 	private @JsonIgnore @ManyToMany List<Document> docList;
+	private Integer chapterId;
+	private Integer nodeId;
 
 }
