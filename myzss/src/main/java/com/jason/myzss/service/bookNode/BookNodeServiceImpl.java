@@ -24,4 +24,9 @@ public class BookNodeServiceImpl implements BookNodeService {
 		return bookNodeRepository.findByTextBookIdAndDepth(id, depth);
 	}
 
+	@Override
+	public void saveAndUpdate(List<BookNode> booknodes) {
+		bookNodeRepository.save(booknodes);
+	}
+
 }

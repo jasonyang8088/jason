@@ -24,7 +24,8 @@
 	<div class="container-fluid">
 		<div th:replace="admin/fragments/baseDataLeft :: baseDataLeft">
 			<div class="col-md-2">
-				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item" href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
+				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item"
+					href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
 			</div>
 		</div>
 		<div class="col-md-10">
@@ -38,30 +39,44 @@
 						<option value="1">小学</option>
 						<option value="2">初中</option>
 						<option value="3">高中</option>
-					</select>
-					<select ng-change="changeSubject(subjectId)" ng-model="subjectId" ng-options="subject.id as subject.subjectName for subject in subjectIter">
-					</select>
-					<select ng-change="changeVersion(versionId)" ng-model="versionId" ng-options="version.id as version.versionName for version in versionIter">
-					</select>
-					<select ng-change="changeBook(bookId)" ng-model="bookId" ng-options="book.id as book.bookName for book in bookIter">
+					</select> <select ng-change="changeSubject(subjectId)" ng-model="subjectId"
+						ng-options="subject.id as subject.subjectName for subject in subjectIter">
+					</select> <select ng-change="changeVersion(versionId)" ng-model="versionId"
+						ng-options="version.id as version.versionName for version in versionIter">
+					</select> <select ng-change="changeBook(bookId)" ng-model="bookId"
+						ng-options="book.id as book.bookName for book in bookIter">
 					</select>
 				</div>
 				<div class="panel-body">
-					<button ng-click="addNode()" class="btn btn-default">添加</button>
+					<button ng-click="addNode()" class="btn btn-default">添加根节点</button>
 					<button class="btn btn-default">修改</button>
 					<button class="btn btn-default">删除</button>
 				</div>
 				<div style="padding: 16px" class="container">
 					<ul class="nodeList" ng-repeat="node1 in bookNodeIter">
-						<span ng-show="!tag.edit" ng-click="bindNode(node1)" ng-dblclick="tag.edit = true">{{node1.name}}</span>
+						<span ng-show="!tag.edit" ng-dblclick="tag.edit = true">{{node1.name}}</span>
 						<input type="text" ng-blur="tag.edit = false" ng-show="tag.edit" ng-model="node1.name" />
+						<button type="button" ng-click="addNode2(node1.bookNodeList)" class="btn btn-default btn-xs"
+							aria-label="Left Align">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+						</button>
+						<button type="button" ng-click="deleteNode(bookNodeIter,node1,$index)" class="btn btn-default btn-xs"
+							aria-label="Left Align">
+							<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+						</button>
+						<div style="padding:6px"></div>
 						<ul ng-repeat="node2 in node1.bookNodeList">
-							<a ng-click="bindNode(node2)" ng-model="node2">{{node2.name}}</a>
+							<span ng-show="!tag.edit" ng-dblclick="tag.edit = true">{{node2.name}}</span>
+							<input type="text" ng-blur="tag.edit = false" ng-show="tag.edit" ng-model="node2.name" />
+							<button type="button" ng-click="deleteNode(node1.bookNodeList,node2,$index)" class="btn btn-default btn-xs"
+								aria-label="Left Align">
+								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+							</button>
 						</ul>
 					</ul>
 				</div>
 				<div class="panel-footer">
-					<button>保存</button>
+					<button ng-click="saveNodes()">保存</button>
 					<p>{{text}}</p>
 				</div>
 			</div>
@@ -92,39 +107,47 @@
 			$http.get('/common/stage/' + stage + '/subjects').success(
 					function(response) {
 						$scope.subjectIter = response;
-						if (response != null) {
+						if (response != '') {
 							$scope.datas = angular.fromJson(response);
 							$scope.subjectId = $scope.datas[0].id;
 							$scope.changeSubject($scope.subjectId);
-						}
+						} else
+							$scope.bookNodeIter = '';
 					})
 		};
 		$scope.changeSubject = function(subjectId) {
 			$http.get('/common/subject/' + subjectId + '/versions').success(
 					function(response) {
 						$scope.versionIter = response;
-						if (response != null) {
+						if (response != '') {
 							$scope.datas = angular.fromJson(response);
 							$scope.versionId = $scope.datas[0].id;
 							$scope.changeVersion($scope.versionId);
-						}
+						} else
+							$scope.bookNodeIter = '';
 					});
 		};
 		$scope.changeVersion = function(versionId) {
 			$http.get('/common/version/' + versionId + '/textbooks').success(
 					function(response) {
 						$scope.bookIter = response;
-						if (response != null) {
+						if (response != '') {
 							$scope.datas = angular.fromJson(response);
 							$scope.bookId = $scope.datas[0].id;
 							$scope.changeBook($scope.bookId);
-						}
+						} else
+							$scope.bookNodeIter = '';
 					});
 		};
 		$scope.changeBook = function(bookId) {
 			$http.get('/common/textbook/' + bookId + '/booknodes').success(
 					function(response) {
 						$scope.bookNodeIter = response;
+						if (response != '') {
+							$scope.datas = angular.fromJson(response);
+							$scope.textBook=$scope.datas[0].textBook;
+						} else
+							$scope.bookNodeIter = '';
 					});
 		};
 		$scope.bindNode = function(node) {
@@ -134,16 +157,33 @@
 			var bookNode = {
 				'textBook' : $scope.textBook,
 				'depth' : '1',
-				name : '请修改名称'
+				name : '请双击修改名称'
 			}
-
-			if ($scope.node != null) {
-				angular.forEach($scope.bookNodeIter, function(node) {
-					if (node.id == $scope.node.id)
-						node.bookNodeList.push(bookNode);
-				});
-			} else
-				$scope.bookNodeIter.push(bookNode);
+			$scope.bookNodeIter.push(bookNode);
+		};
+		$scope.addNode2 = function(nodeList) {
+			var bookNode = {
+				'textBook' : $scope.textBook,
+				'depth' : '2',
+				name : '请双击修改名称'
+			}
+			nodeList.push(bookNode);
+		};
+		$scope.deleteNode = function(nodeList, node,index) {
+			for (var i =nodeList.length - 1; i >= 0; i--) {
+			    if (nodeList[i].name==node.name) {
+			    	nodeList.splice(i, 1);
+			    }
+			}
+		};
+		$scope.saveNodes = function() {
+			$http({
+				url : "/common/booknodes",
+				method : "put",
+				data :angular.toJson($scope.bookNodeIter)
+			}).success(function(response) {
+				$scope.changeBook($scope.textBook.id);
+			})
 		};
 	});
 </script>

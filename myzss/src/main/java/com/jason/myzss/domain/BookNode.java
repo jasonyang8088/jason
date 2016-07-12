@@ -2,6 +2,7 @@ package com.jason.myzss.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,8 +25,8 @@ public class BookNode {
 	private @ManyToOne @NotNull TextBook textBook;
 	private @NotNull Byte depth;
 	private @Column(length=20) @NotNull String name;
-	private @OneToMany List<BookNode> bookNodeList;
-	private @JsonIgnore @ManyToMany List<Document> docList;
+	private @OneToMany(cascade=CascadeType.ALL)List<BookNode> bookNodeList;
+	private @JsonIgnore @ManyToMany (mappedBy="bookNodeList")List<Document> docList;
 	private Integer chapterId;
 	private Integer nodeId;
 

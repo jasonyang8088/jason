@@ -8,4 +8,5 @@ public interface BookNodeService {
 
 	public List<BookNode> findByBookId(Long id);
 	public List<BookNode> findByBookIdAndDepth(Long id,Byte depth);
+	public void saveAndUpdate(List<BookNode> booknodes);
 }

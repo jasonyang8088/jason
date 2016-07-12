@@ -23,7 +23,8 @@ public class Document {
 	private String year;
 	private @ManyToOne DocType docType;
 	private BigInteger downloadCount;
-	private BigInteger goodCount;
+	private Integer goodCount;
+	private Integer badCount;
 	private Date uploadTime;
 	private Date checkTime;
 	private Byte status;

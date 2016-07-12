@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+</head>
+<body ng-app="versionApp" ng-controller="versionCtrl">
+	<!-- Header -->
+	<div th:replace="admin/fragments/header :: header">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Brand</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<li><a href="#">首页</a></li>
+					<li><a href="#">资料库</a></li>
+					<li><a href="#">试题库</a></li>
+				</div>
+			</div>
+		</nav>
+	</div>
+
+	<div class="container-fluid">
+		<div th:replace="admin/fragments/baseDataLeft :: baseDataLeft">
+			<div class="col-md-2">
+				<a class="list-group-item" href="#">学科管理</a> <a class="list-group-item" href="#">教材版本</a> <a class="list-group-item" href="#">教材册别</a> <a class="list-group-item" href="#">地区管理</a>
+			</div>
+		</div>
+		<div class="col-md-10">
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">新增加一个版本</a>
+						</div>
+					</div>
+					<div id="collapseOne" class="panel-collapse collapse {{collapseIn}}">
+						<div class="panel-body">
+							<div>
+								<input type="text" ng-model="versionName" placeholder="请输入你将建立的版本名称"></input>
+							</div>
+							<div style="padding: 8px">
+								你将建立的版本是
+								<mark>
+									<span ng-if="stage==1">小学</span>
+									<span ng-if="stage==2">初中</span>
+									<span ng-if="stage==3">高中</span>
+								</mark>
+								<mark>{{subject.subjectName}}</mark>
+								<mark> {{versionName}}</mark>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<button ng-click="saveVersion()">保存</button>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<select ng-change="changeStage(stage)" ng-model="stage">
+							<option value="1">小学</option>
+							<option value="2">初中</option>
+							<option value="3">高中</option>
+						</select>
+						<select ng-change="changeSubject(subjectId)" ng-model="subjectId" ng-options="subject.id as subject.subjectName for subject in subjectIter">
+						</select>
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<td>ID</td>
+								<td>学段</td>
+								<td>科目</td>
+								<td>版本名称</td>
+								<td>状态</td>
+								<td>操作</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="version in versionIter" ng-model="version1">
+								<td>{{version.id}}</td>
+								<td ng-if="version.subject.stage==1">小学</td>
+								<td ng-if="version.subject.stage==2">初中</td>
+								<td ng-if="version.subject.stage==3">高中</td>
+								<td>{{version.subject.subjectName}}</td>
+								<td>{{version.versionName}}</td>
+								<td>{{version.status}}</td>
+								<td><button ng-click="toShowVersion(version)" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-lg">修改</button> <a class="btn btn-default">冻结</a> <button class="btn btn-default" ng-click="delectVersion(version)">删除</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<input type="text" ng-model="version.versionName" placeholder="请输入你将改成的版本名称"></input>
+					</div>
+					<div style="padding: 8px">
+						你将修改成的版本是
+						<mark>
+							<span ng-if="stage==1">小学</span>
+							<span ng-if="stage==2">初中</span>
+							<span ng-if="stage==3">高中</span>
+						</mark>
+						<mark>{{version.subject.subjectName}}</mark>
+						<mark> {{version.versionName}}</mark>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button ng-click="updateVersion(version)" type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script th:href="@{/js/pagination.js}"></script>
+<script>
+	var subjectApp = angular.module("versionApp", []);
+	subjectApp.controller("versionCtrl", function($scope, $http) {
+		$scope.stage = '1';
+		$scope.subjectId = '101';
+		
+		$scope.changeStage = function(stage) {
+			$http.get('/common/stage/' + stage + '/subjects').success(
+					function(response) {
+						$scope.subjectIter = response;
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.subjectId = $scope.datas[0].id;
+							$scope.subject = $scope.datas[0];
+							$scope.changeSubject($scope.subjectId);
+						}
+					})
+		};
+		$scope.changeSubject = function(subjectId) {
+			angular.forEach($scope.subjectIter,function(subject){
+				if(subject.id==subjectId)$scope.subject=subject;
+			});
+			$http.get('/common/subject/' + subjectId + '/versions').success(
+					function(response) {
+						$scope.versionIter = response;
+						if (response != null) {
+							$scope.datas = angular.fromJson(response);
+							$scope.subject = $scope.datas[0].subject;
+						}
+					});
+		};
+		$scope.saveVersion = function() {
+			$http({
+				url : "/common/version",
+				method : "post",
+				data : {
+					"subject" : $scope.subject,
+					"versionName" : $scope.versionName
+				}
+			}).success(function(response) {
+				$scope.versionIter = response;
+				$scope.versionName = '';
+			})
+		};
+		$scope.delectVersion = function(version) {
+			$http({
+				url : "/common/version/"+version.id,
+				method : "delete",
+			}).success(function(response) {
+				$scope.changeSubject($scope.subjectId)
+			})
+		};
+		$scope.toShowVersion = function(version) {
+			$scope.version=version;
+		};
+		
+		$scope.updateVersion = function(version) {
+			$http({
+				url : "/common/version/"+version.id,
+				method : "put",
+				data:{
+					'versionName':version.versionName
+				}
+			}).success(function(response) {
+				$scope.changeSubject($scope.subjectId)
+			})
+		};
+		$scope.changeStage($scope.stage);
+	});
+</script>
+</html>
