@@ -47,7 +47,7 @@ public class BookNodeTest {
 			bookNodeRepository.save(node1);
 			List<BookNode> list = new ArrayList<BookNode>();
 			list.add(node1);
-			node.setBookNodeList(list);
+			node.setBookNodes(list);
 			bookNodeRepository.save(node);
 			BookNode node11 = new BookNode();
 			node11.setName("第二章的内容");
@@ -60,7 +60,7 @@ public class BookNodeTest {
 			bookNodeRepository.save(node12);
 			List<BookNode> list1 = new ArrayList<BookNode>();
 			list1.add(node11);
-			node.setBookNodeList(list1);
+			node.setBookNodes(list1);
 			bookNodeRepository.save(node11);
 		}
 	}

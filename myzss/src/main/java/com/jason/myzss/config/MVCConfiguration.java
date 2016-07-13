@@ -12,16 +12,21 @@ public class MVCConfiguration extends WebMvcConfigurerAdapter {
 		registry.addViewController("/").setViewName("index");
 		registry.addViewController("/teacher").setViewName("/teacher/index");
 		registry.addViewController("/teacher/resource").setViewName("/teacher/resource/resourceIndex");
-//		registry.addViewController("/admin/subject").setViewName("/admin/subject/index");
+	
 		
 		registry.addViewController("/admin").setViewName("/admin/index");
 		registry.addViewController("/admin/baseData").setViewName("/admin/baseData/baseDataIndex");
 		registry.addViewController("/admin/document").setViewName("/admin/document/documentIndex");
+		registry.addViewController("/admin/authority").setViewName("/admin/authority/index");
 	
 		
 		registry.addViewController("/admin/baseData/subjectIndex").setViewName("/admin/baseData/subjectIndex");
 		registry.addViewController("/admin/baseData/versionIndex").setViewName("/admin/baseData/versionIndex");
 		registry.addViewController("/admin/baseData/textBookIndex").setViewName("/admin/baseData/textBookIndex");
 		registry.addViewController("/admin/baseData/bookNodeIndex").setViewName("/admin/baseData/bookNodeIndex");
+		
+		
+		registry.addViewController("/admin/authority/roleIndex").setViewName("/admin/authority/roleIndex");
+		registry.addViewController("/admin/authority/authorityIndex").setViewName("/admin/authority/authorityIndex");
 	}
 }

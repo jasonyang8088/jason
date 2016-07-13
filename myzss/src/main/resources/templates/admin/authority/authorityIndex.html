@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+</head>
+<body ng-app="authorityApp" ng-controller="authorityController">
+	<!-- Header -->
+	<div th:replace="admin/fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div th:replace="admin/fragments/authorityLeft :: authorityLeft"></div>
+		<div class="col-md-10">
+			<div class="panel panel-default" style="padding: 16px" ng-controller="versionCtrl">
+				<div class="panel-body">
+					<button ng-click="addNode()" class="btn btn-default">添加</button>
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<td>ID</td>
+							<td>权限名称</td>
+							<td>urlPattern</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="authority in authoritys">
+							<td ng-model="authority.id">{{authority.id}}</td>
+							<td ng-model="authority.name">{{authority.name}}</td>
+							<td ng-model="authority.urlPattern">{{authority.urlPattern}}</td>
+							<td ng-model="authority.id"><a class="btn btn-default">修改</a></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="panel-footer">
+					<button ng-click="saveNodes()">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script type="text/javascript">
+	var authorityApp = angular.module("authorityApp", []);
+	authorityApp.controller("authorityController", function($scope, $http) {
+		$http.findPage=function(){
+			$http.get("/admin/authority/authoritys").success(function(response) {
+				$scope.authoritys = response;
+			});
+		};
+		$http.findPage();
+	});
+</script>
+</html>

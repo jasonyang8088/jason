@@ -28,5 +28,5 @@ public class Document {
 	private Date uploadTime;
 	private Date checkTime;
 	private Byte status;
-	private @ManyToMany List<BookNode> bookNodeList;
+	private @ManyToMany List<BookNode> bookNodes;
 }

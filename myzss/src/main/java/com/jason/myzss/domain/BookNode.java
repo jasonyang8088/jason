@@ -25,8 +25,8 @@ public class BookNode {
 	private @ManyToOne @NotNull TextBook textBook;
 	private @NotNull Byte depth;
 	private @Column(length=20) @NotNull String name;
-	private @OneToMany(cascade=CascadeType.ALL)List<BookNode> bookNodeList;
-	private @JsonIgnore @ManyToMany (mappedBy="bookNodeList")List<Document> docList;
+	private @OneToMany(cascade=CascadeType.ALL)List<BookNode> bookNodes;
+	private @JsonIgnore @ManyToMany (mappedBy="bookNodes")List<Document> documents;
 	private Integer chapterId;
 	private Integer nodeId;
 

@@ -140,7 +140,7 @@
 			$http.get('/common/stage/' + stage + '/subjects').success(
 					function(response) {
 						$scope.subjectIter = response;
-						if (response != null) {
+						if (response != '') {
 							$scope.datas = angular.fromJson(response);
 							$scope.subjectId = $scope.datas[0].id;
 							$scope.subject = $scope.datas[0];
@@ -155,7 +155,7 @@
 			$http.get('/common/subject/' + subjectId + '/versions').success(
 					function(response) {
 						$scope.versionIter = response;
-						if (response != null) {
+						if (response !='') {
 							$scope.datas = angular.fromJson(response);
 							$scope.subject = $scope.datas[0].subject;
 						}
