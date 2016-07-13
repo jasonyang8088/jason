@@ -12,27 +12,6 @@
 		<div class="col-md-10">
 			<div class="panel-group" id="accordion">
 				<div class="panel panel-default">
-					<div class="panel-heading">
-						<div class="panel-title">
-							<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">新增加一个权限</a>
-						</div>
-					</div>
-					<div id="collapseOne" class="panel-collapse collapse">
-						<div class="panel-body">
-							<div>
-								<input type="text" ng-model="authority.name" placeholder="请输入你将建立的权限名称"></input>
-							</div>
-							<div>
-								<input type="text" ng-model="authority.sign" placeholder="请输入你将建立的权限标识"></input>
-							</div>
-							<div style="padding: 8px">你将建立的权限是{{authority.name}}{{authority.sign}}</div>
-						</div>
-						<div class="panel-footer">
-							<button ng-click="save(authority)">保存</button>
-						</div>
-					</div>
-				</div>
-				<div class="panel panel-default">
 					<table class="table">
 						<thead>
 							<tr>
@@ -112,10 +91,10 @@
 				$http.findPage();
 			})
 		};
-		$scope.toShowAuthority=function(authority){
-			$scope.authority=authority;
+		$scope.toShowAuthority = function(authority) {
+			$scope.authority = authority;
 		};
-		$scope.updateAuthority=function(authority){
+		$scope.updateAuthority = function(authority) {
 			$http({
 				url : "/admin/authority/authority",
 				method : "put",
@@ -124,9 +103,9 @@
 				$http.findPage();
 			})
 		};
-		$scope.deleteAuthority=function(authority){
+		$scope.deleteAuthority = function(authority) {
 			$http({
-				url : "/admin/authority/authority/"+authority.id,
+				url : "/admin/authority/authority/" + authority.id,
 				method : "delete"
 			}).success(function() {
 				$http.findPage();

@@ -14,7 +14,5 @@ public class Authority {
 	
 	private @Id @GeneratedValue(strategy=GenerationType.AUTO) Long id;
 	private @Column(length=20) String name;
-	private @Column(length=30) String urlPattern;
-	private Byte depth;
-
+	private @Column(length=30) String sign;
 }
