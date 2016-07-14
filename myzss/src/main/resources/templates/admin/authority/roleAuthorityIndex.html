@@ -13,7 +13,7 @@
 			<div class="panel-group" id="accordion">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<select ng-model="roleid" ng-change="changeRole(roleid)" ng-options="role.id as role.name for role in roles">
+						<select ng-model="role.id" ng-change="changeRole(role.id)" ng-options="role.id as role.name for role in roles">
 							<option value="">请选择</option>
 						</select>
 					</div>

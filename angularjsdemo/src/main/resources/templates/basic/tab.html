@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+<style>
+.tab-content.tab-bordered {
+	border: 1px solid lightgray;
+	border-top: none;
+	padding: 15px;
+	border-radius: 0 0 4px 4px;
+}
+</style>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+
+	<div style="padding: 50px" class="col-md-offset-2 col-md-7">
+		<div>
+			<ul class="nav nav-tabs" ng-init="vm.activeTab=1">
+				<li ng-class="{active: vm.activeTab == 1}"><a href="javascript:;" ng-click="vm.activeTab = 1">标签1</a></li>
+				<li ng-class="{active: vm.activeTab == 2}"><a href="javascript:;" ng-click="vm.activeTab = 2">标签2</a></li>
+			</ul>
+			<div class="tab-content tab-bordered">
+				<div class="tab-panel" ng-show="vm.activeTab == 1">标签1的内容</div>
+				<div class="tab-panel" ng-show="vm.activeTab == 2">标签2的内容</div>
+			</div>
+		</div>
+
+
+		<h3>说明</h3>
+		这里演示的是直接通过bootstrap实现的方法。
+		<hr />
+		还可以通过angular-bootstrap的tabset指令实现，参见 <a href="http://angular-ui.github.io/bootstrap/#/tabs"></a>
+	</div>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script>
+	angular.module('myApp', []).controller('myCtrl', function($scope) {
+		var vm = $scope.vm = {};
+	});
+</script>
+</html>
