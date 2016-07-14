@@ -1,0 +1,22 @@
+$scope.isChecked = function(role,id) {
+			angular.forEach(role.authoritys, function(authority) {
+				if (authority.id == id)
+					return true;
+			})
+		}
+		var updateSelected = function(action, role,authority) {
+			if (action == 'add') {
+				role.authoritys.push(authority);
+			}
+			if (action == 'remove') {
+				var idx = $scope.role.authoritys.indexOf(authority);
+				role.authoritys.splice(idx, 1);
+			}
+		};
+
+		$scope.updateSelection = function($event,role, authority) {
+			var checkbox = $event.target;
+			var action = (checkbox.checked ? 'add' : 'remove');
+			updateSelected(action, role,authority);
+		};
+	

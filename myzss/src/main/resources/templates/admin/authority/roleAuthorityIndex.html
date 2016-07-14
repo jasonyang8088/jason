@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+</head>
+<body ng-app="roleAuthorityApp" ng-controller="roleAuthorityController">
+	<!-- Header -->
+	<div th:replace="admin/fragments/header :: header"></div>
+	<div class="container-fluid">
+		<div th:replace="admin/fragments/authorityLeft :: authorityLeft"></div>
+		<div class="col-md-10">
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<select ng-model="roleid" ng-change="changeRole(roleid)" ng-options="role.id as role.name for role in roles">
+							<option value="">请选择</option>
+						</select>
+					</div>
+					<div class="panel-body">
+						<div class="checkbox" ng-model="authority" ng-repeat="authority in authoritys">
+							<label> <input type="checkbox" ng-checked="isChecked(authority)" ng-click="updateSelection($event,authority)"/> {{authority.name}}
+							</label>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<button ng-click="saveRole()">submit</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://apps.bdimg.com/libs/angular.js/1.4.6/angular.min.js"></script>
+<script type="text/javascript">
+	var roleAuthorityApp = angular.module("roleAuthorityApp", []);
+	roleAuthorityApp.controller("roleAuthorityController", function($scope,
+			$http) {
+		$scope.role = "";
+		$scope.role.authoritys = "";
+
+		$scope.findAllRoles = function() {
+			$http.get("/admin/authority/roles").success(function(data) {
+				$scope.roles = data;
+			})
+		}
+		$scope.findAllAuthority = function() {
+			$http.get("/admin/authority/authoritys").success(function(data) {
+				$scope.authoritys = data;
+			})
+		}
+		$scope.isChecked = function(auth) {
+			var data = $scope.role.authoritys;
+			var b = false;
+			angular.forEach(data, function(authority) {
+				if (authority.id == auth.id) {
+					b = true;
+				}
+			})
+			return b;
+		}
+
+		$scope.saveRole = function() {
+			$http({
+				url : "/admin/authority/role",
+				method : "put",
+				data : angular.toJson($scope.role)
+			}).success(function() {
+				$scope.findAllRoles();
+			})
+		};
+		
+		$scope.changeRole=function(roleid){
+			var data = $scope.roles;
+			angular.forEach(data,function(role){
+				if(role.id==roleid)
+					$scope.role=role;
+			})
+		}
+		
+		var updateSelected = function(action,authority) {
+			console.log(action);
+			console.log(authority);
+			console.log($scope.role.authoritys);
+			if (action == 'add') {
+				$scope.role.authoritys.push(authority);
+			}
+			if (action == 'remove') {
+				var auths=$scope.role.authoritys;
+				for(var i=auths.length-1;i >= 0; i--){
+					if(auths[i].id=authority.id){
+						$scope.role.authoritys.splice(i,1)
+					}
+				}
+			}
+			console.log("-------------");
+		};
+
+		$scope.updateSelection = function($event, authority) {
+			var checkbox = $event.target;
+			var action = (checkbox.checked ? 'add' : 'remove');
+			updateSelected(action,authority);
+		};
+
+		$scope.findAllRoles();
+		$scope.findAllAuthority();
+	})
+</script>
+</html>

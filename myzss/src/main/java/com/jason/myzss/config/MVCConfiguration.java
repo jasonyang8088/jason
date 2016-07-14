@@ -29,5 +29,7 @@ public class MVCConfiguration extends WebMvcConfigurerAdapter {
 		registry.addViewController("/admin/authority/roleIndex").setViewName("/admin/authority/roleIndex");
 		registry.addViewController("/admin/authority/userIndex").setViewName("/admin/authority/userIndex");
 		registry.addViewController("/admin/authority/authorityIndex").setViewName("/admin/authority/authorityIndex");
+		registry.addViewController("/admin/authority/userAddIndex").setViewName("/admin/authority/userAddIndex");
+		registry.addViewController("/admin/authority/roleAuthorityIndex").setViewName("/admin/authority/roleAuthorityIndex");
 	}
 }
